@@ -1,0 +1,14 @@
+{
+  "name": "petmatch-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de desarrollo para PetMatch",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}

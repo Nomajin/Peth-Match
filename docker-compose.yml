@@ -1,0 +1,38 @@
+services:
+  database:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${noah}
+      POSTGRES_PASSWORD: ${noah}
+      POSTGRES_DB: ${noah}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${noah} -d ${Pet_Match}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${noah}
+      DB_PASSWORD: ${noah}
+      DB_NAME: ${Pet_Match}
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
